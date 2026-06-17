@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Antris Management Solutions — Your Partner in Management System Solutions</title>
+<meta name="description" content="Antris Management Solutions: ISO consultancy, internal audits, and staff training across quality, environmental, and occupational health & safety standards in Singapore." />
+<link rel="icon" href="assets/logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #060912;
+    --bg-soft: #0b1120;
+    --panel: rgba(18, 27, 46, 0.55);
+    --line: rgba(120, 160, 220, 0.14);
+    --text: #e7ecf5;
+    --muted: #93a2bd;
+    --cyan: #38bdf8;
+    --teal: #2dd4bf;
+    --amber: #fbbf24;
+    --grad: linear-gradient(120deg, #38bdf8, #2dd4bf 55%, #a78bfa);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, .brand { font-family: 'Space Grotesk', sans-serif; letter-spacing: -0.02em; }
+  a { color: inherit; text-decoration: none; }
+
+  /* ---------- 3D background canvas ---------- */
+  #scene { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+  .vignette {
+    position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    background: radial-gradient(ellipse 90% 70% at 50% 35%, transparent 40%, rgba(6,9,18,0.55) 100%);
+  }
+
+  /* ---------- Navigation ---------- */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 6vw;
+    backdrop-filter: blur(10px);
+    background: rgba(6, 9, 18, 0.35);
+    border-bottom: 1px solid transparent;
+    transition: background .3s, border-color .3s;
+  }
+  nav.scrolled { background: rgba(6, 9, 18, 0.82); border-bottom: 1px solid var(--line); }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand img.logo { height: 30px; width: auto; display: block; filter: drop-shadow(0 0 10px rgba(56,189,248,0.45)); }
+  .nav-links { display: flex; gap: 30px; align-items: center; }
+  .nav-links a { font-size: 0.92rem; color: var(--muted); font-weight: 500; transition: color .2s; }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta {
+    padding: 9px 20px; border-radius: 999px; background: var(--grad);
+    color: #04121b !important; font-weight: 600;
+    box-shadow: 0 6px 24px rgba(45, 212, 191, 0.25); transition: transform .2s, box-shadow .2s;
+  }
+  .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(45, 212, 191, 0.4); }
+  .menu-toggle { display: none; background: none; border: 0; color: var(--text); font-size: 1.6rem; cursor: pointer; }
+
+  /* ---------- Layout ---------- */
+  main { position: relative; z-index: 2; }
+  section { padding: 110px 6vw; position: relative; }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.22em;
+    color: var(--teal); font-weight: 600; margin-bottom: 18px;
+  }
+  .eyebrow::before { content: ""; width: 26px; height: 1px; background: var(--teal); display: inline-block; }
+
+  /* ---------- Hero ---------- */
+  .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; max-width: 880px; }
+  .hero h1 {
+    font-size: clamp(2.6rem, 7vw, 5.2rem); font-weight: 700; line-height: 1.04; margin-bottom: 24px;
+    text-shadow: 0 4px 40px rgba(0,0,0,0.6);
+  }
+  .hero h1 .accent { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hero p {
+    font-size: clamp(1.05rem, 2.2vw, 1.3rem); color: #c3cee2; max-width: 600px; margin-bottom: 38px;
+    text-shadow: 0 2px 24px rgba(0,0,0,0.7);
+  }
+  .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+  .btn {
+    padding: 15px 32px; border-radius: 999px; font-weight: 600; font-size: 0.98rem; cursor: pointer;
+    transition: transform .2s, box-shadow .2s, background .2s; display: inline-flex; align-items: center; gap: 10px;
+  }
+  .btn-primary { background: var(--grad); color: #04121b; box-shadow: 0 8px 30px rgba(56, 189, 248, 0.3); }
+  .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(56, 189, 248, 0.45); }
+  .btn-ghost { background: rgba(255,255,255,0.04); color: var(--text); border: 1px solid var(--line); }
+  .btn-ghost:hover { transform: translateY(-3px); border-color: var(--teal); }
+
+  .scroll-hint {
+    position: absolute; bottom: 36px; left: 6vw; display: flex; align-items: center; gap: 12px;
+    color: var(--muted); font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase;
+  }
+  .scroll-hint .mouse { width: 24px; height: 38px; border: 2px solid var(--muted); border-radius: 14px; position: relative; }
+  .scroll-hint .mouse::after {
+    content: ""; position: absolute; top: 7px; left: 50%; transform: translateX(-50%);
+    width: 4px; height: 7px; background: var(--teal); border-radius: 2px; animation: wheel 1.6s infinite;
+  }
+  @keyframes wheel { 0%{opacity:1; top:7px} 70%{opacity:0; top:18px} 100%{opacity:0} }
+
+  /* ---------- Stats strip ---------- */
+  .stats {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; padding: 60px 6vw;
+    border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+    background: rgba(8, 13, 26, 0.5); backdrop-filter: blur(4px);
+  }
+  .stat h3 { font-size: clamp(2rem, 4vw, 3rem); background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .stat p { color: var(--muted); font-size: 0.9rem; }
+
+  /* ---------- Section heading ---------- */
+  .section-head { max-width: 720px; margin-bottom: 56px; }
+  .section-head h2 { font-size: clamp(1.9rem, 4.5vw, 3rem); margin-bottom: 16px; }
+  .section-head p { color: var(--muted); font-size: 1.08rem; }
+
+  /* ---------- Split (text + image) ---------- */
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+  .split.reverse .media-frame { order: -1; }
+  .split h2 { font-size: clamp(1.8rem, 4vw, 2.7rem); margin-bottom: 18px; }
+  .split p { color: var(--muted); margin-bottom: 16px; }
+  .ticks { list-style: none; display: grid; gap: 12px; margin-top: 8px; }
+  .ticks li { color: var(--text); display: flex; align-items: flex-start; gap: 12px; font-size: 0.98rem; }
+  .ticks li::before { content: "✓"; color: var(--teal); font-weight: 700; margin-top: 1px; }
+
+  /* ---------- Media frame (real photos) ---------- */
+  .media-frame {
+    position: relative; border-radius: 22px; overflow: hidden; border: 1px solid var(--line);
+    box-shadow: 0 30px 70px rgba(0,0,0,0.5); transform: translateZ(0);
+  }
+  .media-frame img { width: 100%; height: 100%; object-fit: cover; display: block; aspect-ratio: 3/2; transition: transform .8s cubic-bezier(.2,.7,.2,1); }
+  .media-frame:hover img { transform: scale(1.05); }
+  .media-frame::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(160deg, rgba(56,189,248,0.12), transparent 45%);
+    box-shadow: inset 0 0 0 1px rgba(120,200,255,0.18);
+  }
+  .media-frame .tag {
+    position: absolute; left: 16px; bottom: 16px; z-index: 2;
+    background: rgba(6,12,24,0.75); backdrop-filter: blur(6px); border: 1px solid var(--line);
+    padding: 8px 14px; border-radius: 999px; font-size: 0.8rem; color: var(--teal); font-weight: 600;
+  }
+  .float-anim { animation: floaty 7s ease-in-out infinite; }
+  @keyframes floaty { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-16px)} }
+
+  /* ---------- Services ---------- */
+  .grid { display: grid; gap: 24px; }
+  .services-grid { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); margin-top: 56px; }
+  .card {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 32px;
+    backdrop-filter: blur(8px); position: relative; overflow: hidden;
+    transition: transform .35s cubic-bezier(.2,.7,.2,1), border-color .35s, box-shadow .35s;
+  }
+  .card::before {
+    content: ""; position: absolute; inset: 0;
+    background: radial-gradient(400px circle at var(--mx, 50%) var(--my, 0%), rgba(56,189,248,0.12), transparent 60%);
+    opacity: 0; transition: opacity .35s;
+  }
+  .card:hover { transform: translateY(-8px); border-color: rgba(45,212,191,0.4); box-shadow: 0 24px 50px rgba(0,0,0,0.4); }
+  .card:hover::before { opacity: 1; }
+  .card .ic {
+    width: 52px; height: 52px; border-radius: 13px; display: grid; place-items: center; margin-bottom: 20px;
+    background: rgba(45,212,191,0.12); border: 1px solid rgba(45,212,191,0.3); font-size: 1.5rem;
+  }
+  .card h3 { font-size: 1.25rem; margin-bottom: 10px; }
+  .card p { color: var(--muted); font-size: 0.96rem; }
+
+  /* ---------- Standards (interactive chips) ---------- */
+  .chips { display: flex; flex-wrap: wrap; gap: 14px; perspective: 800px; }
+  .chip {
+    padding: 14px 22px; border-radius: 14px; border: 1px solid var(--line); background: rgba(255,255,255,0.03);
+    font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 0.95rem; cursor: default;
+    transition: transform .2s, border-color .25s, background .25s, color .25s; transform-style: preserve-3d;
+  }
+  .chip small { display: block; font-weight: 400; font-size: 0.72rem; color: var(--muted); font-family: 'Inter'; }
+  .chip:hover { border-color: var(--teal); background: rgba(45,212,191,0.1); color: var(--teal); }
+
+  /* ---------- Process timeline ---------- */
+  .timeline { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; counter-reset: step; margin-top: 12px; }
+  .step { position: relative; padding-top: 56px; }
+  .step::before {
+    counter-increment: step; content: "0" counter(step); position: absolute; top: 0; left: 0;
+    font-family: 'Space Grotesk'; font-weight: 700; font-size: 1.4rem;
+    width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center;
+    background: rgba(56,189,248,0.1); border: 1px solid rgba(56,189,248,0.4); color: var(--cyan);
+  }
+  .step h3 { font-size: 1.15rem; margin-bottom: 8px; }
+  .step p { color: var(--muted); font-size: 0.92rem; }
+
+  /* ---------- Contact ---------- */
+  .contact {
+    background: linear-gradient(160deg, rgba(20,32,58,0.7), rgba(10,16,30,0.7));
+    border: 1px solid var(--line); border-radius: 28px; padding: 64px 7%; text-align: center;
+    backdrop-filter: blur(10px); max-width: 1000px; margin: 0 auto;
+  }
+  .contact h2 { font-size: clamp(2rem, 5vw, 3.2rem); margin-bottom: 18px; }
+  .contact p { color: var(--muted); max-width: 540px; margin: 0 auto 32px; font-size: 1.08rem; }
+  .contact-details { display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; margin-top: 40px; color: var(--muted); font-size: 0.95rem; }
+  .contact-details a { color: var(--teal); }
+
+  footer { padding: 40px 6vw; border-top: 1px solid var(--line); text-align: center; color: var(--muted); font-size: 0.85rem; position: relative; z-index: 2; }
+
+  /* ---------- Reveal animation ---------- */
+  .reveal { opacity: 0; transform: translateY(34px); transition: opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1); }
+  .reveal.in { opacity: 1; transform: none; }
+  .reveal.d1 { transition-delay: .08s; } .reveal.d2 { transition-delay: .16s; } .reveal.d3 { transition-delay: .24s; }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 860px) {
+    .nav-links {
+      position: fixed; inset: 0 0 0 auto; width: 70%; max-width: 320px; flex-direction: column;
+      justify-content: center; padding: 40px; background: rgba(8,12,24,0.97); backdrop-filter: blur(16px);
+      transform: translateX(100%); transition: transform .35s; gap: 26px;
+    }
+    .nav-links.open { transform: none; }
+    .menu-toggle { display: block; z-index: 60; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .split { grid-template-columns: 1fr; gap: 36px; }
+    .split.reverse .media-frame { order: 0; }
+    .timeline { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 520px) {
+    .timeline { grid-template-columns: 1fr; }
+    section { padding: 80px 6vw; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="scene"></canvas>
+<div class="vignette"></div>
+
+<nav id="nav">
+  <a href="#home" class="brand"><img src="assets/logo.png" alt="Antris Management Solutions" class="logo" /></a>
+  <div class="nav-links" id="navLinks">
+    <a href="#services">Services</a>
+    <a href="#standards">Standards</a>
+    <a href="#process">Process</a>
+    <a href="#about">About</a>
+    <a href="#contact" class="nav-cta">Get in touch</a>
+  </div>
+  <button class="menu-toggle" id="menuToggle" aria-label="Menu">&#9776;</button>
+</nav>
+
+<main>
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <span class="eyebrow reveal">Antris Management Solutions</span>
+    <h1 class="reveal d1">Your partner in <span class="accent">management system</span> solutions.</h1>
+    <p class="reveal d2">We help organisations across Singapore and beyond design, certify, and sustain world-class management systems — from quality and environment to occupational health &amp; safety. Built by former auditors from internationally accredited certification bodies.</p>
+    <div class="hero-actions reveal d3">
+      <a href="#contact" class="btn btn-primary">Start your certification →</a>
+      <a href="#services" class="btn btn-ghost">Explore services</a>
+    </div>
+    <div class="scroll-hint"><div class="mouse"></div>Scroll to explore</div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat reveal"><h3>14+</h3><p>International standards covered</p></div>
+    <div class="stat reveal d1"><h3>20+</h3><p>Years of auditing experience</p></div>
+    <div class="stat reveal d2"><h3>100%</h3><p>Focused on your success</p></div>
+    <div class="stat reveal d3"><h3>1:1</h3><p>Hands-on consultant support</p></div>
+  </div>
+
+  <!-- ABOUT (photo: handshake) -->
+  <section id="about">
+    <div class="split">
+      <div class="reveal">
+        <span class="eyebrow">Why Antris</span>
+        <h2>Consultants who've sat on the other side of the table</h2>
+        <p>Our consultants were previously auditors at internationally accredited certification bodies, working across both manufacturing and service sectors. We know exactly what auditors look for — so we build your system to pass with confidence, not just on paper.</p>
+        <ul class="ticks">
+          <li>Practical, jargon-free guidance tailored to how you actually work</li>
+          <li>Direct experience with the standards you need</li>
+          <li>A true partner, from first audit to ongoing maintenance</li>
+        </ul>
+      </div>
+      <div class="media-frame reveal d1 float-anim">
+        <img src="assets/hero.jpg" alt="Antris consultants meeting with a client" loading="lazy" />
+        <span class="tag">Your partner, end to end</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES (photo: hands / discussion) -->
+  <section id="services">
+    <div class="split reverse" style="margin-bottom:24px;">
+      <div class="reveal">
+        <span class="eyebrow">What we do</span>
+        <h2>End-to-end management system consultancy</h2>
+        <p>From the first gap analysis to your certification audit and beyond, we walk every step with you — practical, structured, and tailored to your business.</p>
+      </div>
+      <div class="media-frame reveal d1">
+        <img src="assets/services.jpg" alt="Consultancy discussion in progress" loading="lazy" />
+        <span class="tag">Hands-on consultancy</span>
+      </div>
+    </div>
+    <div class="grid services-grid">
+      <div class="card reveal"><div class="ic">📋</div><h3>ISO Consultancy</h3><p>Design and implement management systems that meet the standard and fit your operations — without the unnecessary paperwork.</p></div>
+      <div class="card reveal d1"><div class="ic">🔍</div><h3>Internal Audits</h3><p>Independent, auditor-led internal audits that find the gaps before your certification body does.</p></div>
+      <div class="card reveal d2"><div class="ic">🎓</div><h3>Staff Training</h3><p>Practical training that turns your team into confident owners of the system, not just followers of procedure.</p></div>
+      <div class="card reveal"><div class="ic">⚙️</div><h3>System Design &amp; Implementation</h3><p>We build the framework — documentation, processes, and controls — and embed it into daily operations.</p></div>
+      <div class="card reveal d1"><div class="ic">🛡️</div><h3>Maintenance &amp; Support</h3><p>Ongoing support to keep your system current through surveillance audits, updates, and standard revisions.</p></div>
+      <div class="card reveal d2"><div class="ic">💡</div><h3>Grant Advisory</h3><p>Guidance on available government grants and schemes to help offset the cost of getting certified.</p></div>
+    </div>
+  </section>
+
+  <!-- STANDARDS (photo + chips) -->
+  <section id="standards">
+    <div class="split">
+      <div class="media-frame reveal float-anim">
+        <img src="assets/standards.jpg" alt="Management standards and analysis" loading="lazy" />
+        <span class="tag">14+ standards covered</span>
+      </div>
+      <div class="reveal d1">
+        <span class="eyebrow">Standards we cover</span>
+        <h2>One team. Every major standard.</h2>
+        <p>Whether you need a single certification or an integrated system spanning several, our consultants bring direct auditing experience to each one. Hover any standard below.</p>
+        <div class="chips" id="chips">
+          <div class="chip">ISO 9001<small>Quality</small></div>
+          <div class="chip">ISO 14001<small>Environmental</small></div>
+          <div class="chip">ISO 45001<small>Health &amp; Safety</small></div>
+          <div class="chip">ISO 13485<small>Medical Devices</small></div>
+          <div class="chip">MDSAP<small>Medical Audit</small></div>
+          <div class="chip">ISO 50001<small>Energy</small></div>
+          <div class="chip">ISO 22000<small>Food Safety</small></div>
+          <div class="chip">ISO 27001<small>Info Security</small></div>
+          <div class="chip">ISO 55001<small>Asset Mgmt</small></div>
+          <div class="chip">ISO 28000<small>Supply Chain</small></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section id="process">
+    <div class="section-head reveal">
+      <span class="eyebrow">How it works</span>
+      <h2>A clear path to certification</h2>
+      <p>No surprises, no guesswork — just a structured journey from where you are to fully certified.</p>
+    </div>
+    <div class="timeline">
+      <div class="step reveal"><h3>Gap Analysis</h3><p>We assess your current processes against the standard and map exactly what's needed.</p></div>
+      <div class="step reveal d1"><h3>Design &amp; Build</h3><p>Together we develop the documentation and controls that fit your business.</p></div>
+      <div class="step reveal d2"><h3>Implement &amp; Audit</h3><p>We embed the system, train your team, and run a full internal audit.</p></div>
+      <div class="step reveal d3"><h3>Certify &amp; Sustain</h3><p>We support you through certification and keep the system thriving afterward.</p></div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="contact reveal">
+      <span class="eyebrow" style="justify-content:center; display:flex;">Let's talk</span>
+      <h2>Ready to get certified?</h2>
+      <p>Tell us about your business and the standard you're aiming for. We'll map out a practical plan to get you there.</p>
+      <a href="https://wa.me/6590400166" class="btn btn-primary" target="_blank" rel="noopener">Message us on WhatsApp →</a>
+      <div class="contact-details">
+        <div>📞 <a href="tel:+6590400166">+65 9040 0166</a></div>
+        <div>📍 7 Temasek Boulevard #12-07, Suntec Tower One, Singapore 038987</div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  © <span id="year"></span> Antris Management Solutions · A 3D concept reimagining · Built with Three.js
+</footer>
+
+<!-- ===================== 3D SCENE ===================== -->
+<script type="importmap">
+{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
+</script>
+<script type="module">
+import * as THREE from 'three';
+
+const canvas = document.getElementById('scene');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+const scene = new THREE.Scene();
+scene.fog = new THREE.FogExp2(0x060912, 0.03);
+
+const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 100);
+camera.position.set(0, 0, 14);
+
+scene.add(new THREE.AmbientLight(0x3a5a85, 0.7));
+const key = new THREE.PointLight(0x9fd8ff, 2.4, 120); key.position.set(12, 8, 14); scene.add(key);
+const fill = new THREE.PointLight(0x2dd4bf, 1.4, 120); fill.position.set(-14, -6, 6); scene.add(fill);
+
+/* group that holds globe + orbiters, can be offset on desktop */
+const core = new THREE.Group();
+scene.add(core);
+
+/* ---- Rotating globe ---- */
+const globeGroup = new THREE.Group();
+globeGroup.rotation.z = 0.41; // ~23.5° axial tilt
+core.add(globeGroup);
+
+const globeMat = new THREE.MeshStandardMaterial({ color: 0x244660, metalness: 0.25, roughness: 0.85 });
+const globe = new THREE.Mesh(new THREE.SphereGeometry(3.1, 64, 64), globeMat);
+globeGroup.add(globe);
+
+// Earth texture from a CORS-enabled CDN; falls back gracefully to the base colour
+new THREE.TextureLoader().load(
+  'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/textures/planets/earth_atmos_2048.jpg',
+  (tex) => { tex.colorSpace = THREE.SRGBColorSpace; globeMat.map = tex; globeMat.color.set(0xffffff); globeMat.needsUpdate = true; }
+);
+
+// Glowing atmosphere
+const atmo = new THREE.Mesh(
+  new THREE.SphereGeometry(3.4, 64, 64),
+  new THREE.MeshBasicMaterial({ color: 0x39a7ff, transparent: true, opacity: 0.14, side: THREE.BackSide, blending: THREE.AdditiveBlending })
+);
+core.add(atmo);
+
+// Subtle lat/long grid that spins with the globe
+const grid = new THREE.LineSegments(
+  new THREE.WireframeGeometry(new THREE.SphereGeometry(3.13, 24, 16)),
+  new THREE.LineBasicMaterial({ color: 0x57d4c4, transparent: true, opacity: 0.10 })
+);
+globeGroup.add(grid);
+
+// Orbit ring
+const ring = new THREE.Mesh(
+  new THREE.TorusGeometry(4.7, 0.012, 8, 160),
+  new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.35 })
+);
+ring.rotation.x = Math.PI / 2.3;
+core.add(ring);
+
+/* ---- Orbiting satellites (the standards) ---- */
+const nodeMat = new THREE.MeshStandardMaterial({ color: 0x2dd4bf, emissive: 0x158f7e, metalness: 0.4, roughness: 0.3 });
+const orbits = [];
+for (let i = 0; i < 6; i++) {
+  const m = new THREE.Mesh(new THREE.OctahedronGeometry(0.3, 0), nodeMat);
+  orbits.push({ m, radius: 4.7 + Math.random() * 1.1, speed: 0.18 + Math.random() * 0.22, phase: Math.random() * Math.PI * 2, tilt: (Math.random() - 0.5) * 1.4 });
+  core.add(m);
+}
+
+/* ---- Starfield ---- */
+const pCount = 1500;
+const positions = new Float32Array(pCount * 3);
+for (let i = 0; i < pCount; i++) {
+  const r = 13 + Math.random() * 26, t = Math.random() * Math.PI * 2, p = Math.acos(2 * Math.random() - 1);
+  positions[i*3] = r*Math.sin(p)*Math.cos(t); positions[i*3+1] = r*Math.sin(p)*Math.sin(t); positions[i*3+2] = r*Math.cos(p);
+}
+const pGeo = new THREE.BufferGeometry();
+pGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+const particles = new THREE.Points(pGeo, new THREE.PointsMaterial({ color: 0x76c7ff, size: 0.08, transparent: true, opacity: 0.7, blending: THREE.AdditiveBlending, depthWrite: false }));
+scene.add(particles);
+
+/* ---- Interaction ---- */
+const mouse = { x: 0, y: 0, tx: 0, ty: 0 };
+window.addEventListener('pointermove', (e) => { mouse.tx = e.clientX / window.innerWidth - 0.5; mouse.ty = e.clientY / window.innerHeight - 0.5; });
+let scrollY = 0;
+window.addEventListener('scroll', () => { scrollY = window.scrollY; }, { passive: true });
+
+function layout() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  // push the globe to the right on wide screens so hero text stays clear
+  core.position.x = window.innerWidth > 900 ? 3.4 : 0;
+}
+layout();
+window.addEventListener('resize', layout);
+
+const clock = new THREE.Clock();
+function animate() {
+  const t = clock.getElapsedTime();
+  const scrollNorm = scrollY / (document.body.scrollHeight - window.innerHeight || 1);
+
+  globe.rotation.y = t * 0.16;
+  grid.rotation.y = t * 0.16;
+  ring.rotation.z = t * 0.25;
+  core.rotation.y = Math.sin(t * 0.15) * 0.12;
+  core.position.y = Math.sin(t * 0.4) * 0.2 - scrollNorm * 1.5;
+
+  orbits.forEach((o) => {
+    const a = t * o.speed + o.phase;
+    o.m.position.set(Math.cos(a) * o.radius, Math.sin(a * 1.3 + o.tilt) * 1.5, Math.sin(a) * o.radius);
+    o.m.rotation.x = t * 0.8; o.m.rotation.y = t * 0.6;
+  });
+
+  particles.rotation.y = t * 0.02; particles.rotation.x = t * 0.01;
+
+  mouse.x += (mouse.tx - mouse.x) * 0.05; mouse.y += (mouse.ty - mouse.y) * 0.05;
+  camera.position.x += (mouse.x * 4 - camera.position.x) * 0.05;
+  camera.position.y += (-mouse.y * 3 - camera.position.y) * 0.05;
+  const targetZ = 14 + scrollNorm * 5;
+  camera.position.z += (targetZ - camera.position.z) * 0.05;
+  camera.lookAt(core.position.x * 0.5, 0, 0);
+
+  renderer.render(scene, camera);
+  requestAnimationFrame(animate);
+}
+animate();
+</script>
+
+<!-- ===================== UI behaviour ===================== -->
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 40));
+
+  const toggle = document.getElementById('menuToggle');
+  const links = document.getElementById('navLinks');
+  toggle.addEventListener('click', () => links.classList.toggle('open'));
+  links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => links.classList.remove('open')));
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('pointermove', (e) => {
+      const r = card.getBoundingClientRect();
+      card.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
+      card.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100) + '%');
+    });
+  });
+
+  document.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('pointermove', (e) => {
+      const r = chip.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width - 0.5, py = (e.clientY - r.top) / r.height - 0.5;
+      chip.style.transform = `translateY(-5px) rotateY(${px*16}deg) rotateX(${-py*16}deg) scale(1.05)`;
+    });
+    chip.addEventListener('pointerleave', () => { chip.style.transform = ''; });
+  });
+</script>
+</body>
+</html>
