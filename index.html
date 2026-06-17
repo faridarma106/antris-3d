@@ -11,36 +11,41 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
 <style>
   :root {
-    --bg: #060912;
-    --bg-soft: #0b1120;
-    --panel: rgba(18, 27, 46, 0.55);
-    --line: rgba(120, 160, 220, 0.14);
-    --text: #e7ecf5;
-    --muted: #93a2bd;
-    --cyan: #38bdf8;
-    --teal: #2dd4bf;
-    --amber: #fbbf24;
-    --grad: linear-gradient(120deg, #38bdf8, #2dd4bf 55%, #a78bfa);
+    --bg: #eef3fb;
+    --bg-soft: #ffffff;
+    --panel: rgba(255, 255, 255, 0.74);
+    --line: rgba(23, 49, 99, 0.12);
+    --text: #0e1a2b;
+    --muted: #56688a;
+    --blue: #2563eb;
+    --cyan: #0ea5e9;
+    --teal: #0d9488;
+    --grad: linear-gradient(120deg, #0ea5e9, #0d9488 55%, #6366f1);
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
   body {
     font-family: 'Inter', system-ui, sans-serif;
-    background: var(--bg);
     color: var(--text);
     overflow-x: hidden;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
+    background:
+      radial-gradient(1100px 560px at 82% -8%, #dfe9ff, transparent 60%),
+      radial-gradient(900px 500px at 0% 100%, #e3fbf6, transparent 55%),
+      linear-gradient(180deg, #ffffff 0%, #eef3fb 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
   }
   h1, h2, h3, .brand { font-family: 'Space Grotesk', sans-serif; letter-spacing: -0.02em; }
   a { color: inherit; text-decoration: none; }
 
-  /* ---------- 3D background canvas ---------- */
+  /* ---------- 3D canvas ---------- */
   #scene { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
   .vignette {
     position: fixed; inset: 0; z-index: 1; pointer-events: none;
-    background: radial-gradient(ellipse 90% 70% at 50% 35%, transparent 40%, rgba(6,9,18,0.55) 100%);
+    background: radial-gradient(ellipse 100% 80% at 50% 28%, transparent 58%, rgba(220,231,247,0.5) 100%);
   }
 
   /* ---------- Navigation ---------- */
@@ -49,22 +54,22 @@
     display: flex; align-items: center; justify-content: space-between;
     padding: 14px 6vw;
     backdrop-filter: blur(10px);
-    background: rgba(6, 9, 18, 0.35);
+    background: rgba(255, 255, 255, 0.62);
     border-bottom: 1px solid transparent;
-    transition: background .3s, border-color .3s;
+    transition: background .3s, border-color .3s, box-shadow .3s;
   }
-  nav.scrolled { background: rgba(6, 9, 18, 0.82); border-bottom: 1px solid var(--line); }
+  nav.scrolled { background: rgba(255, 255, 255, 0.92); border-bottom: 1px solid var(--line); box-shadow: 0 6px 24px rgba(20,40,80,0.06); }
   .brand { display: flex; align-items: center; gap: 10px; }
-  .brand img.logo { height: 30px; width: auto; display: block; filter: drop-shadow(0 0 10px rgba(56,189,248,0.45)); }
+  .brand img.logo { height: 30px; width: auto; display: block; filter: saturate(1.4) brightness(0.8) drop-shadow(0 1px 1px rgba(0,0,0,0.12)); }
   .nav-links { display: flex; gap: 30px; align-items: center; }
   .nav-links a { font-size: 0.92rem; color: var(--muted); font-weight: 500; transition: color .2s; }
   .nav-links a:hover { color: var(--text); }
   .nav-cta {
     padding: 9px 20px; border-radius: 999px; background: var(--grad);
-    color: #04121b !important; font-weight: 600;
-    box-shadow: 0 6px 24px rgba(45, 212, 191, 0.25); transition: transform .2s, box-shadow .2s;
+    color: #fff !important; font-weight: 600;
+    box-shadow: 0 6px 22px rgba(13, 148, 136, 0.28); transition: transform .2s, box-shadow .2s;
   }
-  .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(45, 212, 191, 0.4); }
+  .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(13, 148, 136, 0.4); }
   .menu-toggle { display: none; background: none; border: 0; color: var(--text); font-size: 1.6rem; cursor: pointer; }
 
   /* ---------- Layout ---------- */
@@ -73,7 +78,7 @@
   .eyebrow {
     display: inline-flex; align-items: center; gap: 8px;
     font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.22em;
-    color: var(--teal); font-weight: 600; margin-bottom: 18px;
+    color: var(--teal); font-weight: 700; margin-bottom: 18px;
   }
   .eyebrow::before { content: ""; width: 26px; height: 1px; background: var(--teal); display: inline-block; }
 
@@ -81,21 +86,21 @@
   .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; max-width: 880px; }
   .hero h1 {
     font-size: clamp(2.6rem, 7vw, 5.2rem); font-weight: 700; line-height: 1.04; margin-bottom: 24px;
-    text-shadow: 0 4px 40px rgba(0,0,0,0.6);
+    text-shadow: 0 2px 30px rgba(255,255,255,0.85);
   }
   .hero h1 .accent { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
   .hero p {
-    font-size: clamp(1.05rem, 2.2vw, 1.3rem); color: #c3cee2; max-width: 600px; margin-bottom: 38px;
-    text-shadow: 0 2px 24px rgba(0,0,0,0.7);
+    font-size: clamp(1.05rem, 2.2vw, 1.3rem); color: #44546f; max-width: 600px; margin-bottom: 38px;
+    text-shadow: 0 1px 18px rgba(255,255,255,0.9);
   }
   .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
   .btn {
     padding: 15px 32px; border-radius: 999px; font-weight: 600; font-size: 0.98rem; cursor: pointer;
     transition: transform .2s, box-shadow .2s, background .2s; display: inline-flex; align-items: center; gap: 10px;
   }
-  .btn-primary { background: var(--grad); color: #04121b; box-shadow: 0 8px 30px rgba(56, 189, 248, 0.3); }
-  .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(56, 189, 248, 0.45); }
-  .btn-ghost { background: rgba(255,255,255,0.04); color: var(--text); border: 1px solid var(--line); }
+  .btn-primary { background: var(--grad); color: #fff; box-shadow: 0 10px 30px rgba(14, 165, 233, 0.32); }
+  .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(14, 165, 233, 0.45); }
+  .btn-ghost { background: #fff; color: var(--text); border: 1px solid var(--line); box-shadow: 0 4px 14px rgba(20,40,80,0.05); }
   .btn-ghost:hover { transform: translateY(-3px); border-color: var(--teal); }
 
   .scroll-hint {
@@ -113,7 +118,7 @@
   .stats {
     display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; padding: 60px 6vw;
     border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
-    background: rgba(8, 13, 26, 0.5); backdrop-filter: blur(4px);
+    background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(6px);
   }
   .stat h3 { font-size: clamp(2rem, 4vw, 3rem); background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
   .stat p { color: var(--muted); font-size: 0.9rem; }
@@ -135,19 +140,19 @@
   /* ---------- Media frame (real photos) ---------- */
   .media-frame {
     position: relative; border-radius: 22px; overflow: hidden; border: 1px solid var(--line);
-    box-shadow: 0 30px 70px rgba(0,0,0,0.5); transform: translateZ(0);
+    box-shadow: 0 30px 60px rgba(20, 40, 80, 0.14); transform: translateZ(0); background: #fff;
   }
   .media-frame img { width: 100%; height: 100%; object-fit: cover; display: block; aspect-ratio: 3/2; transition: transform .8s cubic-bezier(.2,.7,.2,1); }
   .media-frame:hover img { transform: scale(1.05); }
   .media-frame::after {
     content: ""; position: absolute; inset: 0; pointer-events: none;
-    background: linear-gradient(160deg, rgba(56,189,248,0.12), transparent 45%);
-    box-shadow: inset 0 0 0 1px rgba(120,200,255,0.18);
+    background: linear-gradient(160deg, rgba(14,165,233,0.10), transparent 45%);
+    box-shadow: inset 0 0 0 1px rgba(20,40,80,0.06);
   }
   .media-frame .tag {
     position: absolute; left: 16px; bottom: 16px; z-index: 2;
-    background: rgba(6,12,24,0.75); backdrop-filter: blur(6px); border: 1px solid var(--line);
-    padding: 8px 14px; border-radius: 999px; font-size: 0.8rem; color: var(--teal); font-weight: 600;
+    background: rgba(255,255,255,0.88); backdrop-filter: blur(6px); border: 1px solid var(--line);
+    padding: 8px 14px; border-radius: 999px; font-size: 0.8rem; color: var(--teal); font-weight: 700;
   }
   .float-anim { animation: floaty 7s ease-in-out infinite; }
   @keyframes floaty { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-16px)} }
@@ -158,31 +163,33 @@
   .card {
     background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 32px;
     backdrop-filter: blur(8px); position: relative; overflow: hidden;
+    box-shadow: 0 12px 30px rgba(20,40,80,0.07);
     transition: transform .35s cubic-bezier(.2,.7,.2,1), border-color .35s, box-shadow .35s;
   }
   .card::before {
     content: ""; position: absolute; inset: 0;
-    background: radial-gradient(400px circle at var(--mx, 50%) var(--my, 0%), rgba(56,189,248,0.12), transparent 60%);
+    background: radial-gradient(400px circle at var(--mx, 50%) var(--my, 0%), rgba(14,165,233,0.12), transparent 60%);
     opacity: 0; transition: opacity .35s;
   }
-  .card:hover { transform: translateY(-8px); border-color: rgba(45,212,191,0.4); box-shadow: 0 24px 50px rgba(0,0,0,0.4); }
+  .card:hover { transform: translateY(-8px); border-color: rgba(13,148,136,0.45); box-shadow: 0 26px 50px rgba(20,40,80,0.14); }
   .card:hover::before { opacity: 1; }
   .card .ic {
     width: 52px; height: 52px; border-radius: 13px; display: grid; place-items: center; margin-bottom: 20px;
-    background: rgba(45,212,191,0.12); border: 1px solid rgba(45,212,191,0.3); font-size: 1.5rem;
+    background: rgba(13,148,136,0.10); border: 1px solid rgba(13,148,136,0.28); font-size: 1.5rem;
   }
   .card h3 { font-size: 1.25rem; margin-bottom: 10px; }
   .card p { color: var(--muted); font-size: 0.96rem; }
 
-  /* ---------- Standards (interactive chips) ---------- */
+  /* ---------- Standards chips ---------- */
   .chips { display: flex; flex-wrap: wrap; gap: 14px; perspective: 800px; }
   .chip {
-    padding: 14px 22px; border-radius: 14px; border: 1px solid var(--line); background: rgba(255,255,255,0.03);
+    padding: 14px 22px; border-radius: 14px; border: 1px solid var(--line); background: #fff;
+    box-shadow: 0 6px 16px rgba(20,40,80,0.06);
     font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 0.95rem; cursor: default;
     transition: transform .2s, border-color .25s, background .25s, color .25s; transform-style: preserve-3d;
   }
   .chip small { display: block; font-weight: 400; font-size: 0.72rem; color: var(--muted); font-family: 'Inter'; }
-  .chip:hover { border-color: var(--teal); background: rgba(45,212,191,0.1); color: var(--teal); }
+  .chip:hover { border-color: var(--teal); background: rgba(13,148,136,0.08); color: var(--teal); }
 
   /* ---------- Process timeline ---------- */
   .timeline { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; counter-reset: step; margin-top: 12px; }
@@ -191,25 +198,29 @@
     counter-increment: step; content: "0" counter(step); position: absolute; top: 0; left: 0;
     font-family: 'Space Grotesk'; font-weight: 700; font-size: 1.4rem;
     width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center;
-    background: rgba(56,189,248,0.1); border: 1px solid rgba(56,189,248,0.4); color: var(--cyan);
+    background: rgba(37,99,235,0.08); border: 1px solid rgba(37,99,235,0.35); color: var(--blue);
   }
   .step h3 { font-size: 1.15rem; margin-bottom: 8px; }
   .step p { color: var(--muted); font-size: 0.92rem; }
 
-  /* ---------- Contact ---------- */
+  /* ---------- Contact (vivid CTA band) ---------- */
   .contact {
-    background: linear-gradient(160deg, rgba(20,32,58,0.7), rgba(10,16,30,0.7));
-    border: 1px solid var(--line); border-radius: 28px; padding: 64px 7%; text-align: center;
-    backdrop-filter: blur(10px); max-width: 1000px; margin: 0 auto;
+    background: linear-gradient(135deg, #0ea5e9, #0d9488 58%, #6366f1);
+    border-radius: 28px; padding: 64px 7%; text-align: center; color: #fff;
+    box-shadow: 0 30px 70px rgba(13, 148, 136, 0.28); max-width: 1000px; margin: 0 auto;
   }
+  .contact .eyebrow { color: rgba(255,255,255,0.92); justify-content: center; display: flex; }
+  .contact .eyebrow::before { background: rgba(255,255,255,0.85); }
   .contact h2 { font-size: clamp(2rem, 5vw, 3.2rem); margin-bottom: 18px; }
-  .contact p { color: var(--muted); max-width: 540px; margin: 0 auto 32px; font-size: 1.08rem; }
-  .contact-details { display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; margin-top: 40px; color: var(--muted); font-size: 0.95rem; }
-  .contact-details a { color: var(--teal); }
+  .contact p { color: rgba(255,255,255,0.92); max-width: 540px; margin: 0 auto 32px; font-size: 1.08rem; }
+  .contact .btn-primary { background: #fff; color: #0b5563; box-shadow: 0 12px 30px rgba(0,0,0,0.16); }
+  .contact .btn-primary:hover { box-shadow: 0 18px 40px rgba(0,0,0,0.22); }
+  .contact-details { display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; margin-top: 40px; color: rgba(255,255,255,0.92); font-size: 0.95rem; }
+  .contact-details a { color: #fff; text-decoration: underline; text-underline-offset: 3px; }
 
   footer { padding: 40px 6vw; border-top: 1px solid var(--line); text-align: center; color: var(--muted); font-size: 0.85rem; position: relative; z-index: 2; }
 
-  /* ---------- Reveal animation ---------- */
+  /* ---------- Reveal ---------- */
   .reveal { opacity: 0; transform: translateY(34px); transition: opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1); }
   .reveal.in { opacity: 1; transform: none; }
   .reveal.d1 { transition-delay: .08s; } .reveal.d2 { transition-delay: .16s; } .reveal.d3 { transition-delay: .24s; }
@@ -218,8 +229,8 @@
   @media (max-width: 860px) {
     .nav-links {
       position: fixed; inset: 0 0 0 auto; width: 70%; max-width: 320px; flex-direction: column;
-      justify-content: center; padding: 40px; background: rgba(8,12,24,0.97); backdrop-filter: blur(16px);
-      transform: translateX(100%); transition: transform .35s; gap: 26px;
+      justify-content: center; padding: 40px; background: rgba(255,255,255,0.97); backdrop-filter: blur(16px);
+      transform: translateX(100%); transition: transform .35s; gap: 26px; box-shadow: -10px 0 40px rgba(20,40,80,0.08);
     }
     .nav-links.open { transform: none; }
     .menu-toggle { display: block; z-index: 60; }
@@ -272,7 +283,7 @@
     <div class="stat reveal d3"><h3>1:1</h3><p>Hands-on consultant support</p></div>
   </div>
 
-  <!-- ABOUT (photo: handshake) -->
+  <!-- ABOUT -->
   <section id="about">
     <div class="split">
       <div class="reveal">
@@ -292,7 +303,7 @@
     </div>
   </section>
 
-  <!-- SERVICES (photo: hands / discussion) -->
+  <!-- SERVICES -->
   <section id="services">
     <div class="split reverse" style="margin-bottom:24px;">
       <div class="reveal">
@@ -315,7 +326,7 @@
     </div>
   </section>
 
-  <!-- STANDARDS (photo + chips) -->
+  <!-- STANDARDS -->
   <section id="standards">
     <div class="split">
       <div class="media-frame reveal float-anim">
@@ -360,7 +371,7 @@
   <!-- CONTACT -->
   <section id="contact">
     <div class="contact reveal">
-      <span class="eyebrow" style="justify-content:center; display:flex;">Let's talk</span>
+      <span class="eyebrow">Let's talk</span>
       <h2>Ready to get certified?</h2>
       <p>Tell us about your business and the standard you're aiming for. We'll map out a practical plan to get you there.</p>
       <a href="https://wa.me/6590400166" class="btn btn-primary" target="_blank" rel="noopener">Message us on WhatsApp →</a>
@@ -390,75 +401,72 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 
 const scene = new THREE.Scene();
-scene.fog = new THREE.FogExp2(0x060912, 0.03);
+scene.fog = new THREE.FogExp2(0xeef3fb, 0.02);
 
 const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 100);
 camera.position.set(0, 0, 14);
 
-scene.add(new THREE.AmbientLight(0x3a5a85, 0.7));
-const key = new THREE.PointLight(0x9fd8ff, 2.4, 120); key.position.set(12, 8, 14); scene.add(key);
-const fill = new THREE.PointLight(0x2dd4bf, 1.4, 120); fill.position.set(-14, -6, 6); scene.add(fill);
+// Lights tuned for a bright scene
+scene.add(new THREE.AmbientLight(0xffffff, 0.75));
+const sun = new THREE.DirectionalLight(0xffffff, 1.5); sun.position.set(6, 4, 8); scene.add(sun);
+const rim = new THREE.PointLight(0x88bbff, 0.6, 120); rim.position.set(-12, -4, 4); scene.add(rim);
 
-/* group that holds globe + orbiters, can be offset on desktop */
 const core = new THREE.Group();
 scene.add(core);
 
-/* ---- Rotating globe ---- */
+/* ---- Earth with axial tilt ---- */
 const globeGroup = new THREE.Group();
-globeGroup.rotation.z = 0.41; // ~23.5° axial tilt
+globeGroup.rotation.z = 0.41; // ~23.5°
 core.add(globeGroup);
 
-const globeMat = new THREE.MeshStandardMaterial({ color: 0x244660, metalness: 0.25, roughness: 0.85 });
-const globe = new THREE.Mesh(new THREE.SphereGeometry(3.1, 64, 64), globeMat);
-globeGroup.add(globe);
+const texLoader = new THREE.TextureLoader();
+const earthMat = new THREE.MeshStandardMaterial({ color: 0x2b6cb0, roughness: 1, metalness: 0 });
+const earth = new THREE.Mesh(new THREE.SphereGeometry(3.0, 64, 64), earthMat);
+globeGroup.add(earth);
+texLoader.load('assets/earth.jpg', (t) => {
+  t.colorSpace = THREE.SRGBColorSpace; earthMat.map = t; earthMat.color.set(0xffffff); earthMat.needsUpdate = true;
+});
 
-// Earth texture from a CORS-enabled CDN; falls back gracefully to the base colour
-new THREE.TextureLoader().load(
-  'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/textures/planets/earth_atmos_2048.jpg',
-  (tex) => { tex.colorSpace = THREE.SRGBColorSpace; globeMat.map = tex; globeMat.color.set(0xffffff); globeMat.needsUpdate = true; }
-);
+// Rotating cloud layer
+const cloudMat = new THREE.MeshStandardMaterial({ color: 0xffffff, transparent: true, opacity: 0.85, depthWrite: false, roughness: 1 });
+const clouds = new THREE.Mesh(new THREE.SphereGeometry(3.06, 64, 64), cloudMat);
+globeGroup.add(clouds);
+texLoader.load('assets/clouds.png', (t) => { cloudMat.alphaMap = t; cloudMat.needsUpdate = true; });
 
-// Glowing atmosphere
+// Soft atmosphere halo
 const atmo = new THREE.Mesh(
-  new THREE.SphereGeometry(3.4, 64, 64),
-  new THREE.MeshBasicMaterial({ color: 0x39a7ff, transparent: true, opacity: 0.14, side: THREE.BackSide, blending: THREE.AdditiveBlending })
+  new THREE.SphereGeometry(3.32, 64, 64),
+  new THREE.MeshBasicMaterial({ color: 0x9fd0ff, transparent: true, opacity: 0.22, side: THREE.BackSide })
 );
 core.add(atmo);
-
-// Subtle lat/long grid that spins with the globe
-const grid = new THREE.LineSegments(
-  new THREE.WireframeGeometry(new THREE.SphereGeometry(3.13, 24, 16)),
-  new THREE.LineBasicMaterial({ color: 0x57d4c4, transparent: true, opacity: 0.10 })
-);
-globeGroup.add(grid);
 
 // Orbit ring
 const ring = new THREE.Mesh(
   new THREE.TorusGeometry(4.7, 0.012, 8, 160),
-  new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.35 })
+  new THREE.MeshBasicMaterial({ color: 0x2563eb, transparent: true, opacity: 0.4 })
 );
 ring.rotation.x = Math.PI / 2.3;
 core.add(ring);
 
-/* ---- Orbiting satellites (the standards) ---- */
-const nodeMat = new THREE.MeshStandardMaterial({ color: 0x2dd4bf, emissive: 0x158f7e, metalness: 0.4, roughness: 0.3 });
+/* ---- Orbiting satellites ---- */
+const nodeMat = new THREE.MeshStandardMaterial({ color: 0x0d9488, emissive: 0x0a5f57, emissiveIntensity: 0.5, metalness: 0.3, roughness: 0.4 });
 const orbits = [];
 for (let i = 0; i < 6; i++) {
-  const m = new THREE.Mesh(new THREE.OctahedronGeometry(0.3, 0), nodeMat);
+  const m = new THREE.Mesh(new THREE.OctahedronGeometry(0.28, 0), nodeMat);
   orbits.push({ m, radius: 4.7 + Math.random() * 1.1, speed: 0.18 + Math.random() * 0.22, phase: Math.random() * Math.PI * 2, tilt: (Math.random() - 0.5) * 1.4 });
   core.add(m);
 }
 
-/* ---- Starfield ---- */
-const pCount = 1500;
+/* ---- Subtle floating dust ---- */
+const pCount = 700;
 const positions = new Float32Array(pCount * 3);
 for (let i = 0; i < pCount; i++) {
-  const r = 13 + Math.random() * 26, t = Math.random() * Math.PI * 2, p = Math.acos(2 * Math.random() - 1);
+  const r = 13 + Math.random() * 24, t = Math.random() * Math.PI * 2, p = Math.acos(2 * Math.random() - 1);
   positions[i*3] = r*Math.sin(p)*Math.cos(t); positions[i*3+1] = r*Math.sin(p)*Math.sin(t); positions[i*3+2] = r*Math.cos(p);
 }
 const pGeo = new THREE.BufferGeometry();
 pGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-const particles = new THREE.Points(pGeo, new THREE.PointsMaterial({ color: 0x76c7ff, size: 0.08, transparent: true, opacity: 0.7, blending: THREE.AdditiveBlending, depthWrite: false }));
+const particles = new THREE.Points(pGeo, new THREE.PointsMaterial({ color: 0x9fb4dd, size: 0.06, transparent: true, opacity: 0.4, depthWrite: false }));
 scene.add(particles);
 
 /* ---- Interaction ---- */
@@ -471,7 +479,6 @@ function layout() {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
-  // push the globe to the right on wide screens so hero text stays clear
   core.position.x = window.innerWidth > 900 ? 3.4 : 0;
 }
 layout();
@@ -482,8 +489,8 @@ function animate() {
   const t = clock.getElapsedTime();
   const scrollNorm = scrollY / (document.body.scrollHeight - window.innerHeight || 1);
 
-  globe.rotation.y = t * 0.16;
-  grid.rotation.y = t * 0.16;
+  earth.rotation.y = t * 0.14;
+  clouds.rotation.y = t * 0.185;
   ring.rotation.z = t * 0.25;
   core.rotation.y = Math.sin(t * 0.15) * 0.12;
   core.position.y = Math.sin(t * 0.4) * 0.2 - scrollNorm * 1.5;
